@@ -25,28 +25,32 @@ for person, character in zip(actor,character):
     actor_names.append(person.string)
     character_names.append(character.string)
     actor_page = person.get("href")
-    #profile_page = requests.get("https://imdb.com"+actor_page)
-    #profile_page = BeautifulSoup(profile_page.content,"html.parser")
-    #all_movies = profile_page.find_all("div", class_="filmo-row odd")[1].find("b").string
-    #for movies in all_movies:
-    #    movie_list.append(movies)
+    profile_page = requests.get("https://imdb.com"+actor_page)
+    profile_page = BeautifulSoup(profile_page.content,"html.parser")
+    all_movies = profile_page.find_all("div",class_ = "filmo-row odd")
+    for movies in all_movies:
+        movie_list.append(movies.b.string)
+    print(movie_list)
     actor_pages.append(actor_page)
     
-details = {"name":actor_names,"profile_page":actor_pages}
+details = {"name":actor_names,"profile_page":actor_pages,"Movies":movie_list}
 
+print(movie_list)
 print(actor_page)
 print(actor_names)
 print(character_names)
 print(details)
 #print(movie_list)
-print("https://imdb.com"+actor_page[1])
+print("https://imdb.com"+actor_pages[1])
 
 profile_page = requests.get("https://imdb.com"+actor_pages[1])
 profile_page = BeautifulSoup(profile_page.content,"html.parser")
 print(profile_page.prettify())
 print(profile_page.title)
-print(profile_page.find_all(text = "The Imaginarium of Doctor Parnassus")[1].parent.parent.parent)
-print(profile_page.find_all("div", class_="filmo-row odd")[1].find("b").string)
+print(profile_page.find_all(text = "The Dark Knight")[1].parent.parent.parent)
+print(profile_page.find_all("div", class_="filmo-row odd")[1].b.string)
+print(profile_page.find_all("div", class_="filmo-row odd"))
 
+print(details["Movies"])
 
 
