@@ -1,6 +1,7 @@
 import requests
 import pandas as pd 
 from bs4 import BeautifulSoup
+import time
 
 pages_to_scrape = 5
 
@@ -10,9 +11,10 @@ property_df = pd.DataFrame()
 
 for n in range(1,pages_to_scrape+1):
     if n == 1:
-        website = requests.get("https://www.zoopla.co.uk/new-homes/property/london/?q=London&results_sort=newest_listings&search_source=new-homes&page_size=25&pn=1&view_type=list")
+        website = requests.get("https://www.zoopla.co.uk/new-homes/property/london/?results_sort=newest_listings&search_source=refine&page_size=25&view_type=list")
     else:
-        page_url = "https://www.zoopla.co.uk/new-homes/property/london/?q=London&results_sort=newest_listings&search_source=new-homes&page_size=25&pn="+str(n)
+        time.sleep(60)
+        page_url = "https://www.zoopla.co.uk/new-homes/property/london/?results_sort=newest_listings&search_source=refine&page_size=25&pn="+str(n)
         website = requests.get(page_url)
         print(f"Scrapping page number {n}")
     html = BeautifulSoup(website.content,"html.parser")
@@ -37,11 +39,8 @@ for n in range(1,pages_to_scrape+1):
             
         listing_dict ={"Property name":property_location[0],"Listing Page":listing_link,"Property Value":property_value,"Property Postcode": property_postcode,"Property Agent":property_agent}
         property_df = property_df.append(listing_dict, ignore_index = True)
-        print(property_agent_list)
-        print(listing_link)
-        print(property_df)
-        print(property_name)
-        print(property_postcode)
+    
+    print(property_df)
         
         
     property_dict = {"Prices":all_prices,"Property Agents": property_agent_list}
