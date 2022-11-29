@@ -1,11 +1,14 @@
 from selenium import webdriver
 import time 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 def page_scraper():
     property_dict = {"Property_Value": [], "Bedrooms": [], "Bathrooms": [],"Area": [],"Reception":[], "Property Address": [], "Property Description": [] }
+    location = input("What area are you looking for - ")
+    pages_to_scrape = int(input("How many pages to scrape: "))
     driver = webdriver.Chrome()
-    pages_to_scrape = 2
+    driver.get("https://www.zoopla.co.uk/")
     time.sleep(5)
     
     try:
@@ -14,20 +17,26 @@ def page_scraper():
         accept_cookies_button.click()
         
     except:
-        pass
-
+        pass   
+    
+    search_bar = driver.find_element(by = By.XPATH, value = '//*[@class = "c-voGFy"]')
+    search_bar.send_keys(location)
+    search_bar.send_keys(Keys.ENTER)
+    time.sleep(5)
+    driver.current_url
+    driver.find_elements(by = By.XPATH, value = '//button[@role="button"]')[1].click()
+    time.sleep(5)
+    
     for n in range(1,pages_to_scrape+1):
         
-        if n == 1:
-            main_page = "https://www.zoopla.co.uk/new-homes/property/london/?q=London&results_sort=newest_listings&search_source=new-homes&page_size=25&pn=1&view_type=list"
-            driver.get(main_page)
-        else:
-            driver.get(main_page)
+        if n != 1:
+            driver.get(home_page)
             time.sleep(5)
-            next_page = driver.find_elements(by = By.XPATH, value = '//*[@class = "eaoxhri5 css-xtzp5a-ButtonLink-Button-StyledPaginationLink eaqu47p1"]')[6]
-            next_page.click()
-        
-        time.sleep(5)    
+            driver.find_elements(by = By.XPATH, value = '//*[@class = "eaoxhri5 css-xtzp5a-ButtonLink-Button-StyledPaginationLink eaqu47p1"]')[6].click()
+           
+        time.sleep(2) 
+        home_page = driver.current_url
+              
         all_listing = driver.find_elements(by= By.XPATH, value = '//div[@class= "c-PJLV c-PJLV-igALLAE-css"]')
         #print(all_listing[1].find_element(by = By.TAG_NAME, value = "a").get_attribute("href"))
 
@@ -48,16 +57,18 @@ def page_scraper():
             if number_of_listed_features == 2:
                 number_of_bedrooms = "Not listed"
                 number_of_bathrooms = "Not listed"
-            else:
+                reception_yn = "no"
+            elif number_of_listed_features == 3:
+                number_of_bedrooms = property_features[2].text
+                number_of_bathrooms = "Not listed"
+                reception_yn = "no"
+            elif number_of_listed_features == 4:
                 number_of_bedrooms = property_features[2].text
                 number_of_bathrooms = property_features[3].text
-            
-            property_dict["Bedrooms"].append(number_of_bedrooms)
-            property_dict["Bathrooms"].append(number_of_bathrooms)
-            
-            if number_of_listed_features == 4:
                 reception_yn = "no"
-            else:
+            elif number_of_listed_features == 5:
+                number_of_bedrooms = property_features[2].text
+                number_of_bathrooms = property_features[3].text
                 reception_yn = property_features[4].text
                 
                 if reception_yn == None:
@@ -65,6 +76,8 @@ def page_scraper():
                 
                 reception_yn = "yes"
             
+            property_dict["Bedrooms"].append(number_of_bedrooms)
+            property_dict["Bathrooms"].append(number_of_bathrooms)
             property_dict["Reception"].append(reception_yn)
             
             if number_of_listed_features == 6:
