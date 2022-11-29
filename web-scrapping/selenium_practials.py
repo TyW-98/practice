@@ -30,8 +30,9 @@ def page_scraper():
     for n in range(1,pages_to_scrape+1):
         
         if n != 1:
+            print(f"Scrapping page {n}")
             driver.get(home_page)
-            time.sleep(5)
+            time.sleep(7.5)
             driver.find_elements(by = By.XPATH, value = '//*[@class = "eaoxhri5 css-xtzp5a-ButtonLink-Button-StyledPaginationLink eaqu47p1"]')[6].click()
            
         time.sleep(2) 
@@ -54,7 +55,7 @@ def page_scraper():
             property_features = driver.find_elements(by = By.XPATH, value = '//*[@class= "c-PJLV c-PJLV-kQvhQW-centered-true c-PJLV-iPJLV-css"]')
             number_of_listed_features = len(property_features)
             
-            if number_of_listed_features == 2:
+            if number_of_listed_features == 0 or number_of_listed_features == None or number_of_listed_features == 1 or number_of_listed_features == 2:
                 number_of_bedrooms = "Not listed"
                 number_of_bathrooms = "Not listed"
                 reception_yn = "no"
