@@ -1,5 +1,7 @@
 from product import Product
 from cart import ShoppingCart
+from hypothesis import given
+import hypothesis.strategies as st
 import unittest
 
 class ProductTestCase(unittest.TestCase):
@@ -39,9 +41,12 @@ class ProductTestCase(unittest.TestCase):
         self.cart.add_product(self.product)
         self.assertDictEqual(expected_value,self.cart.products)
         
-    def test_add_two_of_a_product(self):
-        expected_value = {'quantity': 2}
-        self.cart.add_product(self.product,2)
+    @given(st.integers().filter(lambda x: x > 0))
+    def test_add_two_of_a_product(self, n):
+        self.cart = ShoppingCart()
+        expected_value = {"quantity": n}
+        self.cart.add_product(self.product, quantity=n)
+        #self.assertEqual(expected_value, self.cart.products[self.product.generate_sku()]["quantity"])
         self.assertDictContainsSubset(expected_value,self.cart.products[self.product.generate_sku()])
         
     def test_add_two_different_products(self):
