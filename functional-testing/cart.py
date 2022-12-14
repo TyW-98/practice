@@ -14,3 +14,4 @@ class ShoppingCart:
         self.products[sku]['quantity'] -= quantity
         if self.products[sku]['quantity'] == 0:
             del self.products[sku]
+            
