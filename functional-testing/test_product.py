@@ -4,7 +4,9 @@ import unittest
 class ProductTestCase(unittest.TestCase):
     
     def setUp(self):
+        # Method 1 -> Open class python script
         self.handle = open("product.py","r")
+        # Method 2 -> Setup product variable 
         self.product = Product("Shoes","S","black")
     
     def test_transform_name(self):
@@ -27,7 +29,10 @@ class ProductTestCase(unittest.TestCase):
         self.assertTrue(file_length > 20)
         
     def tearDown(self):
-        del self.product
+        # Method 1 -> Close class python script
         self.handle.close()
+        # Method 2 -> Delete product variable
+        del self.product
+        
         
 unittest.main(argv =[""],verbosity= 2, exit= False)
