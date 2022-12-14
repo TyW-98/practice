@@ -44,6 +44,22 @@ class ProductTestCase(unittest.TestCase):
         self.cart.add_product(self.product,2)
         self.assertDictContainsSubset(expected_value,self.cart.products[self.product.generate_sku()])
         
+    def test_add_two_different_products(self):
+        product_1 = Product("T-Shirt","XXL","PEACH")
+        product_2 = Product("Pants","XS","Navy")
+        expected_value = {"TSHIRT-XXL-PEACH":{"quantity":1}, "PANTS-XS-NAVY":{"quantity": 1}}
+        self.cart.add_product(product_1)
+        self.cart.add_product(product_2)
+        self.assertDictEqual(expected_value,self.cart.products)
+        
+    def test_remove_too_many(self):
+        product_1 = Product("Shoes","S","Blue")
+        
+        self.cart.add_product(product_1)
+        self.cart.remove_product(product_1,2)
+        self.assertDictEqual({}, self.cart.products)
+        
+         
     def tearDown(self):
         # Method 1 -> Close class python script
         self.handle.close()
