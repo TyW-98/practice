@@ -6,7 +6,6 @@ import unittest
 
 class Test_encoder(unittest.TestCase):
     @given(st.text())
-    
     def test_decoder(self, s):
         self.assertEqual(decode(encode(s)),s)
         
