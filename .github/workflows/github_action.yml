@@ -23,6 +23,6 @@ jobs:
       with:
         python-version: '3.8'
         
-    - run: python write_date.py
+    - run: python /github_action/write_date.py
 
 
