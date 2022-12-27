@@ -1,0 +1,30 @@
+name: Github action test
+
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    
+jobs:
+  build:
+  
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: setup python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        
+    - name: Run update date
+      working-directory: ./github_action
+      run: python write_date.py
+  
+
