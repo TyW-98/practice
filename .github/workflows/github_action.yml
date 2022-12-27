@@ -27,4 +27,8 @@ jobs:
       working-directory: ./github_action
       run: python write_date.py
   
-
+    - name: Auto commit date changes
+      uses: stefanzweifel/git-auto-commit-action@v4.16.0
+      with:
+        commit_message: Update repo date
+        branch: main
