@@ -3,6 +3,7 @@ import numpy as np
 import seaborn as sns
 import glob
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 data_files = glob.glob(r"data"+"\*.xlsx")
 dataframe_dict = {}
@@ -17,21 +18,23 @@ for file in data_files:
 print(column_names)
     
 Entries_gender = pd.melt(dataframe_dict["EntriesGender"].drop("Total", axis = 1),id_vars = "Discipline",var_name = "sex")
-f = plt.figure(1)
-sns.barplot(data = Entries_gender, x = "Discipline", y = "value", hue = "sex")
+fig_1 = px.bar(Entries_gender, x = "Discipline", y = "value", color = "sex", title = "Gender split in each sports")
+fig_1.show()
 
 Athletes = dataframe_dict["Athletes"].drop("Name", axis = 1)
 Athletes = Athletes.groupby("NOC").size().reset_index()
-print(Athletes.columns.values.tolist())
-f = plt.figure(2)
-sns.barplot(x = Athletes["NOC"], y = Athletes.iloc[:,1])
+Athletes.rename(columns = {Athletes.columns[1]:"Number of Athletes"}, inplace = True)
+fig_2 = px.bar(Athletes, x = "NOC",y = "Number of Athletes", title = "Number of athletes per country")
+fig_2.show()
 
 Teams = dataframe_dict["Teams"]
 Teams["NOC"] = Teams["NOC"].astype('category')
-f = plt.figure(3)
 Teams.drop("Name", axis = 1, inplace = True)
-sns.countplot(data = Teams, x = "Discipline")
-plt.show()
+Teams = Teams.groupby("Discipline").size().reset_index()
+Teams.rename(columns = {Teams.columns[1]:"Number of Teams"},inplace = True)
+fig_3 = px.bar(Teams, x = "Discipline",y = "Number of Teams", title = "Number of teams in each discipline")
+fig_3.show()
 
 Medals = dataframe_dict["Medals"]
-print(Medals)
+fig_4 = px.bar(Medals, x = "Team/NOC", y = ["Gold","Silver","Bronze"], title = "Each nation's medals")
+fig_4.show()
