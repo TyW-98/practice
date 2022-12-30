@@ -14,8 +14,22 @@ for file in data_files:
     dataframe_dict[file_name[1]] = df
     column_names[file_name[1]] = df.columns.values.tolist()
     
+print(column_names)
+    
 Entries_gender = pd.melt(dataframe_dict["EntriesGender"].drop("Total", axis = 1),id_vars = "Discipline",var_name = "sex")
-print(Entries_gender)
 f = plt.figure(1)
 sns.barplot(data = Entries_gender, x = "Discipline", y = "value", hue = "sex")
+
+Athletes = dataframe_dict["Athletes"].drop("Name", axis = 1)
+f= plt.figure(2)
+sns.countplot(Athletes[:1000], x = "Discipline", hue = "NOC")
+
+Teams = dataframe_dict["Teams"]
+Teams["NOC"] = Teams["NOC"].astype('category')
+f = plt.figure(3)
+Teams.drop("Name", axis = 1, inplace = True)
+sns.countplot(data = Teams, x = "Discipline")
 plt.show()
+
+Medals = dataframe_dict["Medals"]
+print(Medals)
