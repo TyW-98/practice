@@ -21,8 +21,10 @@ f = plt.figure(1)
 sns.barplot(data = Entries_gender, x = "Discipline", y = "value", hue = "sex")
 
 Athletes = dataframe_dict["Athletes"].drop("Name", axis = 1)
-f= plt.figure(2)
-sns.countplot(Athletes[:1000], x = "Discipline", hue = "NOC")
+Athletes = Athletes.groupby("NOC").size().reset_index()
+print(Athletes.columns.values.tolist())
+f = plt.figure(2)
+sns.barplot(x = Athletes["NOC"], y = Athletes.iloc[:,1])
 
 Teams = dataframe_dict["Teams"]
 Teams["NOC"] = Teams["NOC"].astype('category')
