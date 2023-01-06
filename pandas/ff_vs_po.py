@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import datetime
 
 working_dir = (os.path.dirname(os.path.realpath(__file__))+"\data")
 df_salaries = pd.read_csv(working_dir+"\Salaries.csv")
@@ -32,3 +33,13 @@ first_name_length = first_name[first_name.apply(lambda x: len(x) > 6)]
 print(number_of_johns)
 print(first_name_length)
 
+df_salaries["last_updated"] = datetime.datetime.now().isoformat()
+
+df_salaries["time_ratio"] = df_salaries["OvertimePay"]/df_salaries["BasePay"]
+
+new_df = df_salaries[df_salaries["BasePay"] > 100000]
+
+new_df["TotalPay"] = new_df["BasePay"] + new_df["OvertimePay"] + new_df["OtherPay"]
+new_df = new_df.drop("BasePay", axis = 1)
+
+print(new_df)
